@@ -1,11 +1,19 @@
 {
   "name": "quizical",
+  "homepage": "https://steven-tessler.github.io/quizical/build",
   "version": "1.0.0",
   "source": "src/index.html",
+  "targets": {
+	"default": {
+		"distDir": "./build"
+	}
+  },
   "browserslist": [
     "since 2017-06"
   ],
   "scripts": {
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build",
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html --no-cache"
   },
@@ -19,6 +27,7 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "gh-pages": "^3.2.3",
     "prettier": "2.5.1"
   },
   "dependencies": {
