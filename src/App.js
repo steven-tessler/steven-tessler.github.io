@@ -1,9 +1,6 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from "react";
 import { nanoid } from "nanoid";
-import Landing from "./Landing";
+import Landing, { Loading } from "./Landing";
 import "./App.css";
 import { decode } from "html-entities";
 
@@ -41,19 +38,19 @@ function Answer(props) {
   let style = {};
 
   if (chosenAnswer === answer) {
-    style = { backgroundColor: "hsl(299, 48%, 38%, .25)" };
+    style = { backgroundColor: "hsla(133, 46%, 71%, 1)" };
 
     if (isCompleted) {
       if (correctAnswer === chosenAnswer) {
-        style = { backgroundColor: "hsl(155, 81%, 53%,.5)" };
+        style = { backgroundColor: "hsla(133, 46%, 71%, 1)" };
         // incrementCorrectCountRef();
       } else {
-        style = { backgroundColor: "hsl(5, 77%, 60%, .5)" };
+        style = { backgroundColor: "hsla(360, 81%, 85%, .5)" };
       }
     }
   } else if (isCompleted && correctAnswer !== chosenAnswer) {
     if (answer === correctAnswer) {
-      style = { backgroundColor: "hsl(155, 81%, 53%,.5)" };
+      style = { backgroundColor: "hsla(133, 46%, 71%, 1)" };
     }
   }
 
@@ -181,7 +178,8 @@ const App = () => {
   // 	correctCountRef.current++;
   // }
 
-  const FETCH_URL = "https://opentdb.com/api.php?amount=5&difficulty=easy";
+  const FETCH_URL =
+    "https://opentdb.com/api.php?amount=5&type=multiple&difficulty=medium";
 
   useEffect(() => {
     if (!isQuizActive) {
@@ -235,6 +233,7 @@ const App = () => {
   });
   return (
     <main>
+      {isLoading && <Loading />}
       {!isQuizActive && <Landing handleStartGame={handleStartGame} />}
       {isQuizActive && (
         <div>
