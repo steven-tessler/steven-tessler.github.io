@@ -28,7 +28,7 @@ button {
 
 main {
   max-width: 1200px;
-  min-width: 550px;
+  min-width: 600px;
   padding-right: 40px;
 }
 .container {
@@ -158,7 +158,8 @@ main {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
+  min-height: 35px;
+  margin-right: auto;
   margin-bottom: 0px;
 }
 .answer {
@@ -175,6 +176,6 @@ main {
   color: hsla(231, 42%, 28%, 1);
   border: 0.79px solid hsla(230, 34%, 46%, 1);
   border-radius: 5px;
-  padding: 5px 10px;
-  height: 35px;
+  padding: 10px 10px;
+  min-width: 35px;
 }

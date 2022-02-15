@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { nanoid } from "nanoid";
 import Landing, { Loading } from "./Landing";
 import "./App.css";
-import { decode } from "html-entities";
+import { Question } from "./Question";
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -24,120 +24,77 @@ function shuffle(array) {
   return array;
 }
 
-function Answer(props) {
-  const {
-    qid,
-    answer,
-    correctAnswer,
-    chosenAnswer,
-    isCompleted,
-    // incrementCorrectCountRef,
-    onSelectedAnswer,
-  } = props;
-
-  let style = {};
-
-  if (chosenAnswer === answer) {
-    style = { backgroundColor: "hsla(133, 46%, 71%, 1)" };
-
-    if (isCompleted) {
-      if (correctAnswer === chosenAnswer) {
-        style = { backgroundColor: "hsla(133, 46%, 71%, 1)" };
-        // incrementCorrectCountRef();
-      } else {
-        style = { backgroundColor: "hsla(360, 81%, 85%, .5)" };
-      }
-    }
-  } else if (isCompleted && correctAnswer !== chosenAnswer) {
-    if (answer === correctAnswer) {
-      style = { backgroundColor: "hsla(133, 46%, 71%, 1)" };
-    }
-  }
-
+function Score(props) {
+  const { isCompleted, totalCorrect, handlePlayAgain } = props;
   return (
-    <div
-      style={style}
-      className="answer"
-      onClick={() => onSelectedAnswer(qid, answer)}
-    >
-      {decode(answer)}
+    <div>
+      {isCompleted && (
+        <div className="wrapper">
+          <div className="quiz-completed">
+            <h4 className="quiz-completed-score">
+              You scored {totalCorrect} / 5 correct answers
+            </h4>
+            <button
+              className="button button--playAgain"
+              onClick={handlePlayAgain}
+            >
+              Play again
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function Question(props) {
+function Questions(props) {
   const {
-    id,
-    question,
-    answers,
-    correctAnswer,
-    chosenAnswer,
     isCompleted,
-    // incrementCorrectCountRef,
+    isLoading,
+    handleCheckAnswers,
     onSelectedAnswer,
+    questions,
   } = props;
-  // console.log("Question: ", props.answers);
+
+  const questionElements = questions.map((q) => {
+    // console.log("questionElements: ", q);
+    return (
+      <Question
+        key={q.id}
+        id={q.id}
+        question={q.question}
+        answers={q.answers}
+        correctAnswer={q.correctAnswer}
+        chosenAnswer={q.chosenAnswer}
+        onSelectedAnswer={onSelectedAnswer}
+        isCompleted={isCompleted}
+        // incrementCorrectCountRef={incrementCorrectCountRef}
+      />
+    );
+  });
   return (
-    <div className="wrapper">
-      <div className="container">
-        <h2 className="question">{decode(question)}</h2>
-        <section className="answers">
-          {answers.map((answer) => {
-            {
-              /* console.log("answers.map: ", question, answer, correctAnswer); */
-            }
-            return (
-              <Answer
-                qid={id}
-                key={nanoid()}
-                answer={answer}
-                correctAnswer={correctAnswer}
-                chosenAnswer={chosenAnswer}
-                isCompleted={isCompleted}
-                // incrementCorrectCountRef={incrementCorrectCountRef}
-                onSelectedAnswer={onSelectedAnswer}
-              />
-            );
-          })}
-        </section>
-      </div>
-    </div>
+    <>
+      <div>{questionElements}</div>
+      {!isCompleted && (
+        <div>
+          {!isLoading && (
+            <button
+              className="button checkAnswersButton "
+              onClick={handleCheckAnswers}
+            >
+              Check Answers
+            </button>
+          )}
+        </div>
+      )}
+    </>
   );
 }
 
 const App = () => {
   // const correctCountRef = useRef(0);
   const [questions, setQuestions] = useState([]);
-  // 	[
-  // 	{
-  // 		id: 1,
-  // 		question: "1st question",
-  // 		answers: ["Answer 1", "2nd Answer", "3rd Answer", "4th Answer"],
-  // 		correctAnswer: "2nd Answer",
-  // 		chosenAnswer: "",
-  // 	},
-  // 	{
-  // 		id: 2,
-  // 		question: "2nd question",
-  // 		answers: ["Answer 1", "2nd Answer", "3rd Answer", "4th Answer"],
-  // 		correctAnswer: "3rd Answer",
-  // 		chosenAnswer: "",
-  // 	},
-  // 	{
-  // 		id: 3,
-  // 		question: "3rd question",
-  // 		answers: ["Answer 1", "2nd Answer", "3rd Answer", "4th Answer"],
-  // 		correctAnswer: "4th Answer",
-  // 		chosenAnswer: "",
-  // 	},
-  // 	{
-  // 		id: 4,
-  // 		question: "4th question",
-  // 		answers: ["Answer 1", "2nd Answer", "3rd Answer", "4th Answer"],
-  // 		correctAnswer: "Answer 1",
-  // 		chosenAnswer: "",
-  // 	},
-  // ]
+
   const [isCompleted, setIsCompleted] = useState(false);
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -164,7 +121,7 @@ const App = () => {
     );
   }
 
-  function handleCheckAnswers(questions) {
+  function handleCheckAnswers() {
     setIsCompleted(true);
     setTotalCorrect(() => {
       let total = 0;
@@ -215,56 +172,25 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuizActive]);
 
-  const questionElements = questions.map((q) => {
-    // console.log("questionElements: ", q);
-    return (
-      <Question
-        key={q.id}
-        id={q.id}
-        question={q.question}
-        answers={q.answers}
-        correctAnswer={q.correctAnswer}
-        chosenAnswer={q.chosenAnswer}
-        onSelectedAnswer={onSelectedAnswer}
-        isCompleted={isCompleted}
-        // incrementCorrectCountRef={incrementCorrectCountRef}
-      />
-    );
-  });
   return (
     <main>
       {isLoading && <Loading />}
       {!isQuizActive && <Landing handleStartGame={handleStartGame} />}
       {isQuizActive && (
         <div>
-          <div>{questionElements}</div>
-          {!isCompleted && (
-            <div>
-              {!isLoading && (
-                <button
-                  className="button checkAnswersButton "
-                  onClick={() => handleCheckAnswers(questions)}
-                >
-                  Check Answers
-                </button>
-              )}
-            </div>
-          )}
-          {isCompleted && (
-            <div className="wrapper">
-              <div className="quiz-completed">
-                <h4 className="quiz-completed-score">
-                  You scored {totalCorrect} / 5 correct answers
-                </h4>
-                <button
-                  className="button button--playAgain"
-                  onClick={handlePlayAgain}
-                >
-                  Play again
-                </button>
-              </div>
-            </div>
-          )}
+          <Questions
+            isCompleted={isCompleted}
+            isLoading={isLoading}
+            handleCheckAnswers={handleCheckAnswers}
+            onSelectedAnswer={onSelectedAnswer}
+            questions={questions}
+          />
+
+          <Score
+            isCompleted={isCompleted}
+            totalCorrect={totalCorrect}
+            handlePlayAgain={handlePlayAgain}
+          />
         </div>
       )}
     </main>
