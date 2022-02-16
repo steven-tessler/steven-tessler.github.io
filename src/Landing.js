@@ -1,7 +1,7 @@
 export function Loading() {
   return <></>;
 }
-export default function Landing({ handleStartGame }) {
+export function Landing({ handleStartGame }) {
   // console.log("In Landing Page");
   return (
     <div className="landing">

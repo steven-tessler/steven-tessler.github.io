@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { nanoid } from "nanoid";
-import Landing, { Loading } from "./Landing";
+import { Landing, Loading } from "./Landing";
 import "./App.css";
-import { Question } from "./Question";
+import { Questions } from "./Questions";
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -44,50 +44,6 @@ function Score(props) {
         </div>
       )}
     </div>
-  );
-}
-
-function Questions(props) {
-  const {
-    isCompleted,
-    isLoading,
-    handleCheckAnswers,
-    onSelectedAnswer,
-    questions,
-  } = props;
-
-  const questionElements = questions.map((q) => {
-    // console.log("questionElements: ", q);
-    return (
-      <Question
-        key={q.id}
-        id={q.id}
-        question={q.question}
-        answers={q.answers}
-        correctAnswer={q.correctAnswer}
-        chosenAnswer={q.chosenAnswer}
-        onSelectedAnswer={onSelectedAnswer}
-        isCompleted={isCompleted}
-        // incrementCorrectCountRef={incrementCorrectCountRef}
-      />
-    );
-  });
-  return (
-    <>
-      <div>{questionElements}</div>
-      {!isCompleted && (
-        <div>
-          {!isLoading && (
-            <button
-              className="button checkAnswersButton "
-              onClick={handleCheckAnswers}
-            >
-              Check Answers
-            </button>
-          )}
-        </div>
-      )}
-    </>
   );
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "quizical",
-  "homepage": "https://steven-tessler.github.io/quizical/build",
+  "homepage": "https://steven-tessler.github.io/",
   "version": "1.0.0",
   "source": "src/index.html",
   "targets": {
@@ -13,9 +13,9 @@
   ],
   "scripts": {
   "predeploy": "npm run build",
-  "deploy": "gh-pages -d build",
+  "deploy": "gh-pages -b -d build",
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --no-cache"
+    "build": "parcel build src/index.html "
   },
   "keywords": [],
   "author": "",
